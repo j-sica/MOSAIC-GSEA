@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export MOSAIC_GSEA_HOME="$SCRIPT_DIR"
+exec Rscript "$SCRIPT_DIR/mosaic_gsea.R" "$@"

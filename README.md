@@ -8,12 +8,11 @@ Fixed-effect models use limma-voom; mixed models use dream. Depending on the des
 
 ## Quick start
 
-MOSAIC-GSEA runs on 64-bit Linux. Download and extract the complete GitHub repository:
+MOSAIC-GSEA runs on 64-bit Linux. Clone the complete GitHub repository:
 
 ```bash
-wget -O MOSAIC-GSEA.zip https://github.com/j-sica/MOSAIC-GSEA/archive/refs/heads/main.zip
-unzip MOSAIC-GSEA.zip
-cd MOSAIC-GSEA-main
+git clone https://github.com/j-sica/MOSAIC-GSEA.git
+cd MOSAIC-GSEA
 ```
 
 Create and activate the supplied Conda environment:
@@ -27,13 +26,13 @@ chmod +x mosaic-gsea
 Run the first example:
 
 ```bash
-./mosaic-gsea \\\\
-  -i test\\\_data/feature\\\_counts\\\_ex\\\_1.txt \\\\
-  -m test\\\_data/metadata\\\_ex1.tsv \\\\
-  -f '\\\~ strain + treatment' \\\\
-  -c treatment \\\\
-  -r YPD \\\\
-  -o example\\\_1
+./mosaic-gsea \
+  -i test_data/feature_counts_ex_1.txt \
+  -m test_data/metadata_ex1.tsv \
+  -f '~ strain + treatment' \
+  -c treatment \
+  -r YPD \
+  -o example_1
 ```
 
 Here, `-f` defines the R model, `-c` selects the factor to compare, `-r` selects its reference level, and `-o` sets the output directory. For the complete command-line interface, run `./mosaic-gsea --help`.
@@ -43,15 +42,15 @@ Here, `-f` defines the R model, `-c` selects the factor to compare, `-r` selects
 To call `mosaic-gsea` without specifying its installation path, add the package directory to your Bash `PATH` (change the path if necessary):
 
 ```bash
-printf '\\\\nexport PATH="$HOME/MOSAIC-GSEA:$PATH"\\\\n' >> \\\~/.bashrc
-source \\\~/.bashrc
+printf '\nexport PATH="$HOME/MOSAIC-GSEA:$PATH"\n' >> ~/.bashrc
+source ~/.bashrc
 mosaic-gsea --version
 ```
 
 You can then launch an analysis from a project directory:
 
 ```bash
-mosaic-gsea -i counts.tsv -m metadata.tsv -f '\\\~ treatment' -c treatment -r control -o results
+mosaic-gsea -i counts.tsv -m metadata.tsv -f '~ treatment' -c treatment -r control -o results
 ```
 
 Relative input and output paths refer to the directory where you run the command. MOSAIC-GSEA finds its scripts, templates and bundled annotations relative to the installation directory, including when launched through `PATH`. By default, it prefers the installed annotation cache; use `--cache-dir DIR` to choose another cache parent directory.
@@ -60,10 +59,10 @@ Relative input and output paths refer to the directory where you run the command
 
 Provide two tabular files:
 
-* **Count matrix:** gene or feature identifiers in the first column, followed by one column per sample with raw counts.
-* **Metadata:** sample identifiers in the first column, followed by the variables referenced in the model formula. Sample names must match the count matrix.
+- **Count matrix:** gene or feature identifiers in the first column, followed by one column per sample with raw counts.
+- **Metadata:** sample identifiers in the first column, followed by the variables referenced in the model formula. Sample names must match the count matrix.
 
-Model variables cannot contain missing values. Metadata names and factor levels must not have surrounding spaces or contain the reserved strings `\\\_vs\\\_`, `\\\_to\\\_`, `\\\_\\\_`, `×` or filename-reserved characters; an ordinary `x` is allowed.
+Model variables cannot contain missing values. Metadata names and factor levels must not have surrounding spaces or contain the reserved strings `_vs_`, `_to_`, `__`, `×` or filename-reserved characters; an ordinary `x` is allowed.
 
 Use unique gene identifiers whenever possible. Duplicate count-matrix labels can be analysed as separate rows, but identifiers mapping to the same annotation are combined into a single GSEA ranking entry. The original names and any such resolution are documented in the output files.
 
@@ -78,7 +77,7 @@ batch factor
 time number
 ```
 
-Continuous variables can be included as covariates, but the primary contrast factor (`-c`) must be categorical. Effective metadata types are saved in `01\\\_differential\\\_expression/metadata\\\_variable\\\_types.tsv`.
+Continuous variables can be included as covariates, but the primary contrast factor (`-c`) must be categorical. Effective metadata types are saved in `01_differential_expression/metadata_variable_types.tsv`.
 
 ## Example designs
 
@@ -87,22 +86,22 @@ The package includes data for three common analyses.
 **1. Additive model — treatment effects adjusted for strain**
 
 ```bash
-mosaic-gsea -i test\\\_data/feature\\\_counts\\\_ex\\\_1.txt -m test\\\_data/metadata\\\_ex1.tsv \\\\
-  -f '\\\~ strain + treatment' -c treatment -r YPD -o example\\\_1
+mosaic-gsea -i test_data/feature_counts_ex_1.txt -m test_data/metadata_ex1.tsv \
+  -f '~ strain + treatment' -c treatment -r YPD -o example_1
 ```
 
 **2. Two-factor interaction — does oxygen change the treatment response?**
 
 ```bash
-mosaic-gsea -i test\\\_data/feature\\\_counts\\\_ethanol\\\_ex2-3.txt -m test\\\_data/metadata\\\_ex2-3.tsv \\\\
-  -f '\\\~ strain + treatment \\\* oxygen' -c treatment -r YPD -o example\\\_2
+mosaic-gsea -i test_data/feature_counts_ethanol_ex2-3.txt -m test_data/metadata_ex2-3.tsv \
+  -f '~ strain + treatment * oxygen' -c treatment -r YPD -o example_2
 ```
 
 **3. Three-factor interaction — does the treatment response depend on strain and oxygen together?**
 
 ```bash
-mosaic-gsea -i test\\\_data/feature\\\_counts\\\_ethanol\\\_ex2-3.txt -m test\\\_data/metadata\\\_ex2-3.tsv \\\\
-  -f '\\\~ strain \\\* treatment \\\* oxygen' -c treatment -r YPD -o example\\\_3
+mosaic-gsea -i test_data/feature_counts_ethanol_ex2-3.txt -m test_data/metadata_ex2-3.tsv \
+  -f '~ strain * treatment * oxygen' -c treatment -r YPD -o example_3
 ```
 
 Interacting categorical factors are detected automatically. Three-factor interaction reporting requires a complete 2 × 2 × 2 design. More complex interaction structures are not supported by the automatic reporting workflow.
@@ -115,12 +114,12 @@ Each analysis creates:
 
 ```text
 results/
-├── 01\\\_differential\\\_expression/
-├── 02\\\_gsea/
-├── 03\\\_final\\\_reports/
+├── 01_differential_expression/
+├── 02_gsea/
+├── 03_final_reports/
 ├── config/
 ├── logs/
-└── README\\\_RESULTS.txt
+└── README_RESULTS.txt
 ```
 
 The final reports contain GO BP and KEGG heatmaps, interactive HTML files and Excel workbooks. The HTML reports let you inspect enrichment statistics, leading-edge genes, volcano plots and overlaps between conditions. For *S. cerevisiae*, relevant SGD gene and biochemical-pathway links are also shown.
@@ -135,7 +134,7 @@ For GO Biological Process, **leading-edge redundancy reduction** groups terms wh
 
 Gene-wise variance estimates are reported separately from enrichment results. For fixed-effect models, the report uses **hierarchical Shapley attribution of voom-weighted model R-squared**: all fixed variables (including categorical factors with multiple levels) are compared through nested models with the same samples and weights. An interaction enters a nested model only when all its participating variables are present; its explanatory contribution is thereby distributed among those variables rather than shown as a separate interaction component. The resulting factor contributions sum to the full weighted model R-squared, with the remaining fraction reported as residual variance, independently of factor reference levels. This exact calculation enumerates subsets of up to 10 fixed variables. Mixed models with categorical fixed effects continue to use aggregate fixed, random and residual components based on marginal and conditional R-squared. These measures are descriptive, not additional significance tests.
 
-Logs include warnings from each processing step. `README\\\_RESULTS.txt`, the model and contrast manifests, and the saved settings document the analysis. To rerun after changing inputs or settings, use the same output directory with `--redo`; valid upstream steps are reused when possible.
+Logs include warnings from each processing step. `README_RESULTS.txt`, the model and contrast manifests, and the saved settings document the analysis. To rerun after changing inputs or settings, use the same output directory with `--redo`; valid upstream steps are reused when possible.
 
 ## Organisms and annotations
 
@@ -151,12 +150,12 @@ Valid local annotation caches are reused. If the SGD cache is missing or invalid
 
 ## Useful options and limitations
 
-* `--interaction-factors auto` detects relevant interactions; use `none` or an explicit list to override detection.
-* `--filter-mode`, `--similarity-metric` and `--similarity-threshold` control interpretation and GO redundancy reporting.
-* `--rank-by`, `--min-gs`, `--max-gs`, `--padj-method` and `--sig-threshold` control ranking and enrichment settings.
-* `--cores N` sets parallel workers for mixed-model and variance fitting (default: 4). If fewer cores are detected, the program warns and uses the available number.
-* `--key-type auto` detects input gene IDs from the selected OrgDb; explicit `--key-type TYPE` overrides it.
-* `--cache-dir DIR` selects a different annotation-cache location; `--redo` resumes a changed analysis.
+- `--interaction-factors auto` detects relevant interactions; use `none` or an explicit list to override detection.
+- `--filter-mode`, `--similarity-metric` and `--similarity-threshold` control interpretation and GO redundancy reporting.
+- `--rank-by`, `--min-gs`, `--max-gs`, `--padj-method` and `--sig-threshold` control ranking and enrichment settings.
+- `--cores N` sets parallel workers for mixed-model and variance fitting (default: 4). If fewer cores are detected, the program warns and uses the available number.
+- `--key-type auto` detects input gene IDs from the selected OrgDb; explicit `--key-type TYPE` overrides it.
+- `--cache-dir DIR` selects a different annotation-cache location; `--redo` resumes a changed analysis.
 
 The workflow requires estimable models with residual degrees of freedom. It does not support no-intercept or saturated designs, arbitrary formula functions, or continuous variables as the primary contrast. GO enrichment relies on organism annotations, not de novo gene function prediction. KEGG resources are subject to the provider's access and licensing terms.
 
@@ -169,4 +168,3 @@ MOSAIC-GSEA source code is released under **GPL-3.0** (see `LICENSE`), including
 ### Identifier conversion and diagnostic messages
 
 MOSAIC-GSEA checks every input gene ID against the available identifier namespaces of the selected OrgDb and reports coverage by namespace. Auto-detection requires at least 50% coverage, warns when coverage is below 80%, and requests an explicit `--key-type` when competing namespaces cannot be distinguished safely. Explicit key types are validated against OrgDb and warned when coverage is below 80%. KEGG identifiers are mapped using direct and available OrgDb-mediated mappings, reporting ambiguous mappings and conversion coverage. The versioned KEGG identifier-mapping cache avoids silently reusing legacy conversions. Existing enrichment results should be regenerated if identifier mappings change.
-

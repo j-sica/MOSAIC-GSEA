@@ -8,7 +8,15 @@ Fixed-effect models use limma-voom; mixed models use dream. Depending on the des
 
 ## Quick start
 
-MOSAIC-GSEA runs on 64-bit Linux. From the extracted package directory, create and activate the supplied Conda environment:
+MOSAIC-GSEA runs on 64-bit Linux. Download and extract the complete GitHub repository (replace `USERNAME` with the GitHub account that hosts MOSAIC-GSEA; the commands below assume the default branch is `main`):
+
+```bash
+wget -O MOSAIC-GSEA.zip https://github.com/USERNAME/MOSAIC-GSEA/archive/refs/heads/main.zip
+unzip MOSAIC-GSEA.zip
+cd MOSAIC-GSEA-main
+```
+
+Create and activate the supplied Conda environment:
 
 ```bash
 conda env create -f environment.yml
